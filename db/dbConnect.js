@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-require("dotenv").config();
+const mongoose = require('mongoose');
+require('dotenv').config();
 
 async function dbConnect() {
   mongoose
@@ -9,10 +9,10 @@ async function dbConnect() {
       useCreateIndex: true,
     })
     .then(() => {
-      console.log("Successfully connected to MongoDB Atlas!");
+      console.log('Successfully connected to MongoDB.');
     })
     .catch((error) => {
-      console.log("Unable to connect to MongoDB Atlas!");
+      console.log('Unable to connect to MongoDB.');
       console.error(error);
     });
 }

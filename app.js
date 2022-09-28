@@ -15,12 +15,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res, next) => {
-  res.json({ message: 'You wanted a response, so here you are!'});
+  res.json({ message: 'You wanted a response, so here you are!' });
   next();
 });
 
 app.post('/register', (req, res) => {
-  bcrypt.hash(req.body.password, 10)
+  bcrypt
+    .hash(req.body.password, 10)
     .then((hashedPassword) => {
       const user = new User({
         email: req.body.email,
@@ -44,28 +45,28 @@ app.post('/register', (req, res) => {
     .catch((error) => {
       res.status(500).send({
         message: 'Password was not hashed successfully',
-        e,
       });
     });
 });
 
-app.post('/login', (req,res) => {
+app.post('/login', (req, res) => {
   User.findOne({ email: req.body.email })
     .then((user) => {
-      bcrypt.compare(req.body.password, user.password)
+      bcrypt
+        .compare(req.body.password, user.password)
         .then((passwordCheck) => {
           if (!passwordCheck) {
             return res.status(400).send({
               message: 'Passwords do not match',
               error,
-            })
+            });
           }
           const token = jwt.sign(
             {
               userId: user._id,
               userEmail: user.email,
             },
-            'RANDOM-TOKEN',
+            process.env.JWT_SECRET,
             { expiresIn: '24h' }
           );
 
@@ -97,7 +98,7 @@ app.get('/free-endpoint', (req, res) => {
 
 // auth endpoint
 app.get('/auth-endpoint', auth, (req, res) => {
-  res.json({ message: 'You are authorized to access me'});
+  res.json({ message: 'You are authorized to access me' });
 });
 
 module.exports = app;

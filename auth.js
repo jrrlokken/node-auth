@@ -4,7 +4,7 @@ module.exports = async (req, res, next) => {
   try {
     // grab the token from the auth header
     const token = await req.headers.authorization.split(' ')[1];
-    const decodedToken = jwt.verify(token, 'RANDOM-TOKEN');
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     const user = decodedToken;
     req.user = user;
     next();
@@ -13,4 +13,4 @@ module.exports = async (req, res, next) => {
       error: new Error('Invalid request'),
     });
   }
-}
+};
